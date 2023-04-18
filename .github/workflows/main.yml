@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+    - main
+    - release/*
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIRST_YEAR: 2015
+      LAST_YEAR: 2018
+      BUCKET: dsongcp_data_lake_de-zoomcamp-prj-375800
+    permissions:
+      contents: 'read'
+      id-token: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0.4.0'
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          token_format: "access_token"
+          create_credentials_file: true
+          workload_identity_provider: 'projects/844679338181/locations/global/workloadIdentityPools/github-wif-pool/providers/githubwif2'
+          service_account: 'dtc-de-zoomcamp-srv-acc-102@de-zoomcamp-prj-375800.iam.gserviceaccount.com'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: set crdential_file
+        run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
+
+      - name: List gcloud vm instances
+        run: gcloud compute instances list --zones us-east1-b
+      
+      - name: Run ingestion script
+        run: |
+          chmod +x ./ingest/ingest.sh
+          ./ingest/ingest.sh $FIRST_YEAR $LAST_YEAR $BUCKET
