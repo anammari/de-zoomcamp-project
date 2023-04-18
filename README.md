@@ -27,15 +27,15 @@ The following technologies have been utilized in the project:
 
 ### Hub-and-Spoke Architecture
 
- ![Architecture-1](img\architecture-1.png?raw=true "Title")
+ ![Architecture-1](img/architecture-1.png)
 
 ### The architecture of the monthly ingest job 
 
-![Architecture-2](img\architecture-2.png?raw=true "Title")
+![Architecture-2](img/architecture-2.png)
 
 ## Dashboard
 
-![Dashboard-1](img\dashbaord-1.png?raw=true "Title")
+![Dashboard-1](img/dashbaord-1.png)
 
 
 ## Implementation Details
